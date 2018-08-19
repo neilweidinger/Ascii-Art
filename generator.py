@@ -94,27 +94,29 @@ def getCharWeightingsKeys(weightings):
 def mapRGBtoChars(rgbData, weightings, keys):
     rgbWidth = len(rgbData[0])
     rgbHeight = len(rgbData)
-    pixelPatchLen = 10
+    pixelPatchLen = 25
 
     for row in range(0, rgbHeight, pixelPatchLen):
-        rowContainingAvgBrightness = []
         for col in range(0, rgbWidth, pixelPatchLen):
-            pixelPatch = []
-
-            for patchRow in range(row, min(row + pixelPatchLen, rgbHeight)):
-                pixelPatchRow = []
-
-                for patchCol in range(col, min(col + pixelPatchLen, rgbWidth)):
-                    pixelPatchRow.append(rgbData[patchRow][patchCol])
-
-                pixelPatch.append(pixelPatchRow)
+            pixelPatch = getPixelPatch(row, col, pixelPatchLen, rgbData, rgbHeight, rgbWidth)
 
             patchAvgBrightness = int(getBrightnessAverage(pixelPatch))
             print(getBrightnessToChar(patchAvgBrightness, weightings, keys), end=" ")
-            rowContainingAvgBrightness.append(patchAvgBrightness)
 
         print("")
-        # print(rowContainingAvgBrightness)
+
+def getPixelPatch(row, col, pixelPatchLen, rgbData, rgbHeight, rgbWidth):
+    pixelPatch = []
+
+    for patchRow in range(row, min(row + pixelPatchLen, rgbHeight)):
+        pixelPatchRow = []
+
+        for patchCol in range(col, min(col + pixelPatchLen, rgbWidth)):
+            pixelPatchRow.append(rgbData[patchRow][patchCol])
+
+        pixelPatch.append(pixelPatchRow)
+
+    return pixelPatch
 
 def getBrightnessToChar(bAverage, weightings, keyList):
     # warning: binarySearch only returns INDEX of closest brightness value, not brightness value itself
@@ -134,7 +136,7 @@ if __name__ == "__main__":
     charWeightings = getCharWeightings()
     charWeightingsKeys = getCharWeightingsKeys(charWeightings)
 
-    img = Image.open("Photos/Mona.png")
+    img = Image.open("Photos/Me.jpg")
     contraster = ImageEnhance.Contrast(img)
     img = contraster.enhance(2.75)
     mapRGBtoChars(extractRGBdata(img), charWeightings, charWeightingsKeys)
