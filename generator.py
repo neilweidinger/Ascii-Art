@@ -1,4 +1,5 @@
-from PIL import Image, ImageFont, ImageDraw
+from PIL import Image, ImageFont, ImageDraw, ImageEnhance
+from search import binarySearch, leftmost, rightmost
 
 # returns 2D array of rgb data [0, 0] corresponding to top left corner of image
 def extractRGBdata(image):
@@ -28,8 +29,8 @@ def printRGBvals(rgbVals):
 def getUnoptimizedCharDict(font):
     charDict= {}
 
-    for i in list(range(33, 127)) + list(range(161, 254)):
-        charImage = Image.new('RGB', (70, 110), (255, 255, 255)) # new blank image
+    for i in range(32, 127):
+        charImage = Image.new('RGB', (70, 90), (255, 255, 255)) # new blank image
         draw = ImageDraw.Draw(charImage) # create ImageDraw object
         draw.text((0, 0), chr(i), fill=(0, 0, 0), font=font) # draw char onto image
 
@@ -76,7 +77,7 @@ def getMinMaxKey(charDict):
     return min, max
 
 def getCharWeightings():
-    font = ImageFont.truetype("Fonts/Menlo.ttc", 100)
+    font = ImageFont.truetype("Fonts/Courier.ttf", 100)
     optimizedChars = getOptimizedCharDict(font)
     
     return optimizedChars
@@ -90,11 +91,11 @@ def getCharWeightingsKeys(weightings):
     keyList.sort()
     return keyList
 
-def mapRGBtoChars(rgbData):
+def mapRGBtoChars(rgbData, weightings, keys):
     rgbWidth = len(rgbData[0])
     rgbHeight = len(rgbData)
-
     pixelPatchLen = 10
+
     for r in range(0, rgbHeight, pixelPatchLen):
 
         rowContainingAvgBrightness = []
@@ -111,18 +112,34 @@ def mapRGBtoChars(rgbData):
                 pixelPatch.append(pixelPatchRow)
 
             patchAvgBrightness = int(getBrightnessAverage(pixelPatch))
+            print(getBrightnessToChar(patchAvgBrightness, weightings, keys), end=" ")
             rowContainingAvgBrightness.append(patchAvgBrightness)
 
-        print(rowContainingAvgBrightness)
+        print("")
+        # print(rowContainingAvgBrightness)
 
+def getBrightnessToChar(bAverage, weightings, keys):
+    exact = binarySearch(keys, bAverage)
+    if exact != -1:
+        return weightings[keys[exact]]
+
+    pred = leftmost(keys, bAverage)
+    succ = rightmost(keys, bAverage)
+    # print("bAverage: {}\t pred: {}\t succ: {}".format(bAverage, pred, succ))
+
+    if bAverage - pred > succ - bAverage:
+        return weightings[keys[pred]]
+    else:
+        return weightings[keys[succ]]
 
 if __name__ == "__main__":
     charWeightings = getCharWeightings()
     charWeightingsKeys = getCharWeightingsKeys(charWeightings)
 
-    img = Image.open("ID_small.jpg")
-    imgRGBdata = extractRGBdata(img)
-    mapRGBtoChars(imgRGBdata)
+    img = Image.open("Photos/Mona.png")
+    contraster = ImageEnhance.Contrast(img)
+    img = contraster.enhance(2.75)
+    mapRGBtoChars(extractRGBdata(img), charWeightings, charWeightingsKeys)
 
     # charList = []
     # for comb in charWeightings.items():
