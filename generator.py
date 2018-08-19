@@ -96,17 +96,15 @@ def mapRGBtoChars(rgbData, weightings, keys):
     rgbHeight = len(rgbData)
     pixelPatchLen = 10
 
-    for r in range(0, rgbHeight, pixelPatchLen):
-
+    for row in range(0, rgbHeight, pixelPatchLen):
         rowContainingAvgBrightness = []
-
-        for c in range(0, rgbWidth, pixelPatchLen):
+        for col in range(0, rgbWidth, pixelPatchLen):
             pixelPatch = []
 
-            for patchRow in range(r, min(r + pixelPatchLen, rgbHeight)):
+            for patchRow in range(row, min(row + pixelPatchLen, rgbHeight)):
                 pixelPatchRow = []
 
-                for patchCol in range(c, min(c + pixelPatchLen, rgbWidth)):
+                for patchCol in range(col, min(col + pixelPatchLen, rgbWidth)):
                     pixelPatchRow.append(rgbData[patchRow][patchCol])
 
                 pixelPatch.append(pixelPatchRow)
