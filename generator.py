@@ -19,7 +19,7 @@ def extractRGBdata(image):
 
     return rgbVals
 
-def printPixels(rgbVals):
+def printRGBvals(rgbVals):
     for row in rgbVals:
         for pixel in row:
             print("{}\t".format(pixel), end="")
@@ -50,13 +50,14 @@ def getBrightnessAverage(rgbData):
 
     return bAverage
 
+# this function just adjusts our character weightings to a scale of [0, 255]
 def optimizeCharDict(charDict):
     newCharDict = {}
 
     min, max = getMinMaxKey(charDict)
 
     for bAverage, char in charDict.items():
-        scaledB = (255 * (bAverage - min)) / (max - min)
+        scaledB = int((255 * (bAverage - min)) / (max - min))
         newCharDict[scaledB] = char
 
     return newCharDict
@@ -80,9 +81,26 @@ def getCharWeightings():
     
     return optimizedChars
 
+def getCharWeightingsKeys(weightings):
+    keyList = []
+    for key in weightings.keys():
+        keyList.append(key)
+
+    keyList.sort()
+    return keyList
+
 if __name__ == "__main__":
     charWeightings = getCharWeightings()
+    charWeightingsKeys = getCharWeightingsKeys(charWeightings)
 
-    img = Image.open("ID_Photo.jpg")
+    img = Image.open("ID_small.jpg")
     imgRGBdata = extractRGBdata(img)
-    getBrightnessAverage(imgRGBdata)
+
+    # charList = []
+    # for comb in charWeightings.items():
+        # charList.append(comb)
+# 
+    # charList.sort()
+    # for comb in charList:
+        # # print(comb[1], end=" ")
+        # print(comb)
