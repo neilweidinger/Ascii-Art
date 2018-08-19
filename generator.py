@@ -78,9 +78,9 @@ def getMinMaxKey(charDict):
 
 def getCharWeightings():
     font = ImageFont.truetype("Fonts/Courier.ttf", 100)
-    optimizedChars = getOptimizedCharDict(font)
+    optimizedCharDict = getOptimizedCharDict(font)
     
-    return optimizedChars
+    return optimizedCharDict
 
 # returns a list of keys in our char weightings dictionary
 def getCharWeightingsKeys(weightings):
@@ -118,19 +118,19 @@ def mapRGBtoChars(rgbData, weightings, keys):
         print("")
         # print(rowContainingAvgBrightness)
 
-def getBrightnessToChar(bAverage, weightings, keys):
-    exact = binarySearch(keys, bAverage)
-    if exact != -1:
-        return weightings[keys[exact]]
+def getBrightnessToChar(bAverage, weightings, keyList):
+    # warning: binarySearch only returns INDEX of closest brightness value, not brightness value itself
+    keyIndex = binarySearch(keyList, bAverage)
+    if keyIndex != -1:
+        return weightings[keyList[keyIndex]]
 
-    pred = leftmost(keys, bAverage)
-    succ = rightmost(keys, bAverage)
-    # print("bAverage: {}\t pred: {}\t succ: {}".format(bAverage, pred, succ))
+    pred = leftmost(keyList, bAverage)
+    succ = rightmost(keyList, bAverage)
 
     if bAverage - pred > succ - bAverage:
-        return weightings[keys[pred]]
+        return weightings[keyList[succ]]
     else:
-        return weightings[keys[succ]]
+        return weightings[keyList[pred]]
 
 if __name__ == "__main__":
     charWeightings = getCharWeightings()
