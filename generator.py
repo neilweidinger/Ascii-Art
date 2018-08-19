@@ -81,6 +81,7 @@ def getCharWeightings():
     
     return optimizedChars
 
+# returns a list of keys in our char weightings dictionary
 def getCharWeightingsKeys(weightings):
     keyList = []
     for key in weightings.keys():
@@ -89,12 +90,39 @@ def getCharWeightingsKeys(weightings):
     keyList.sort()
     return keyList
 
+def mapRGBtoChars(rgbData):
+    rgbWidth = len(rgbData[0])
+    rgbHeight = len(rgbData)
+
+    pixelPatchLen = 10
+    for r in range(0, rgbHeight, pixelPatchLen):
+
+        rowContainingAvgBrightness = []
+
+        for c in range(0, rgbWidth, pixelPatchLen):
+            pixelPatch = []
+
+            for patchRow in range(r, min(r + pixelPatchLen, rgbHeight)):
+                pixelPatchRow = []
+
+                for patchCol in range(c, min(c + pixelPatchLen, rgbWidth)):
+                    pixelPatchRow.append(rgbData[patchRow][patchCol])
+
+                pixelPatch.append(pixelPatchRow)
+
+            patchAvgBrightness = int(getBrightnessAverage(pixelPatch))
+            rowContainingAvgBrightness.append(patchAvgBrightness)
+
+        print(rowContainingAvgBrightness)
+
+
 if __name__ == "__main__":
     charWeightings = getCharWeightings()
     charWeightingsKeys = getCharWeightingsKeys(charWeightings)
 
     img = Image.open("ID_small.jpg")
     imgRGBdata = extractRGBdata(img)
+    mapRGBtoChars(imgRGBdata)
 
     # charList = []
     # for comb in charWeightings.items():
