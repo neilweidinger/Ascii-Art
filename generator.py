@@ -25,7 +25,7 @@ def printRGBvals(rgbVals):
             print("{}\t".format(pixel), end="")
         print("")
 
-def unoptimizedCharDict(font):
+def getUnoptimizedCharDict(font):
     charDict= {}
 
     for i in list(range(33, 127)) + list(range(161, 254)):
@@ -51,13 +51,14 @@ def getBrightnessAverage(rgbData):
     return bAverage
 
 # this function just adjusts our character weightings to a scale of [0, 255]
-def optimizeCharDict(charDict):
+def getOptimizedCharDict(font):
+    charDict = getUnoptimizedCharDict(font)
     newCharDict = {}
 
     min, max = getMinMaxKey(charDict)
 
     for bAverage, char in charDict.items():
-        scaledB = int((255 * (bAverage - min)) / (max - min))
+        scaledB = int((255 * (bAverage - min)) / (max - min)) # truncate each key just to make things simpler
         newCharDict[scaledB] = char
 
     return newCharDict
@@ -76,8 +77,7 @@ def getMinMaxKey(charDict):
 
 def getCharWeightings():
     font = ImageFont.truetype("Fonts/Menlo.ttc", 100)
-    chars = unoptimizedCharDict(font)
-    optimizedChars = optimizeCharDict(chars)
+    optimizedChars = getOptimizedCharDict(font)
     
     return optimizedChars
 
