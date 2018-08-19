@@ -11,13 +11,11 @@ def extractRGBdata(image):
     row = []
     for r, g, b in data:
         row.append((r, g, b))
-
-        if count >= width - 1:
-            rgbVals.append(row)
-            count = 0
-            row = [(r, g, b)]
-
         count += 1
+
+        if count % width == 0:
+            rgbVals.append(row)
+            row = []
 
     return rgbVals
 
@@ -25,7 +23,6 @@ def printPixels(rgbVals):
     for row in rgbVals:
         for pixel in row:
             print("{}\t".format(pixel), end="")
-
         print("")
 
 def unoptimizedCharDict(font):
@@ -35,19 +32,23 @@ def unoptimizedCharDict(font):
         charImage = Image.new('RGB', (70, 110), (255, 255, 255)) # new blank image
         draw = ImageDraw.Draw(charImage) # create ImageDraw object
         draw.text((0, 0), chr(i), fill=(0, 0, 0), font=font) # draw char onto image
-        
-        pixels = extractRGBdata(charImage)
-        width, height = charImage.size
 
-        bTotal = 0
-        for row in pixels:
-            for pixel in row:
-                bTotal += (sum(pixel) / 3)
-        bAverage = bTotal / (width * height)
-
-        charDict[bAverage] = chr(i)
+        charDict[getBrightnessAverage(extractRGBdata(charImage))] = chr(i) # brightnessAvg:char
 
     return charDict
+
+# returns average brightness of a specified patch of pixels
+def getBrightnessAverage(rgbData):
+    width = len(rgbData[0])
+    height = len(rgbData)
+
+    bTotal = 0
+    for row in rgbData:
+        for rgbPixel in row:
+            bTotal += (sum(rgbPixel) / 3)
+    bAverage = bTotal / (width * height)
+
+    return bAverage
 
 def optimizeCharDict(charDict):
     newCharDict = {}
@@ -82,5 +83,6 @@ def getCharWeightings():
 if __name__ == "__main__":
     charWeightings = getCharWeightings()
 
-    for bAverage, char in charWeightings.items():
-        print(bAverage, char)
+    img = Image.open("ID_Photo.jpg")
+    imgRGBdata = extractRGBdata(img)
+    getBrightnessAverage(imgRGBdata)
