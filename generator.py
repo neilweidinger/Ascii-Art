@@ -34,9 +34,9 @@ def getUnoptimizedCharDict(font):
     for i in range(32, 127):
     # for i in list(range(32, 127)) + list(range(9617, 9620)) + list(range(9608, 9609)):
     # for i in list(range(32, 127)) + list(range(9617, 9620)):
-        charImage = Image.new('RGB', (70, 90), (255, 255, 255)) # new blank image
+        charImage = Image.new('RGB', (70, 90), (0, 0, 0)) # new blank image
         draw = ImageDraw.Draw(charImage) # create ImageDraw object
-        draw.text((0, 0), chr(i), fill=(0, 0, 0), font=font) # draw char onto image
+        draw.text((0, 0), chr(i), fill=(255, 255, 255), font=font) # draw char onto image
 
         charDict[getBrightnessAverage(extractRGBdata(charImage))] = chr(i) # brightnessAvg:char
 
