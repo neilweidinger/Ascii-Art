@@ -142,7 +142,7 @@ def getBrightnessToChar(bAverage, weightings, keyList):
 
 if __name__ == "__main__":
     charWeightings = getCharWeightings()
-    charWeightings[255] = chr(32) # make sure space character is included in weightings
+    charWeightings[0] = chr(32) # make sure space character is included in weightings
     charWeightingsKeys = getCharWeightingsKeys(charWeightings)
 
     img = Image.open("Photos/broncos.png")
