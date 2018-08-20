@@ -30,6 +30,8 @@ def getUnoptimizedCharDict(font):
     charDict= {}
 
     for i in range(32, 127):
+    # for i in list(range(32, 127)) + list(range(9617, 9620)) + list(range(9608, 9609)):
+    # for i in list(range(32, 127)) + list(range(9617, 9620)):
         charImage = Image.new('RGB', (70, 90), (255, 255, 255)) # new blank image
         draw = ImageDraw.Draw(charImage) # create ImageDraw object
         draw.text((0, 0), chr(i), fill=(0, 0, 0), font=font) # draw char onto image
@@ -77,7 +79,7 @@ def getMinMaxKey(charDict):
     return min, max
 
 def getCharWeightings():
-    font = ImageFont.truetype("Fonts/Courier.ttf", 100)
+    font = ImageFont.truetype("Fonts/Menlo.ttc", 100)
     optimizedCharDict = getOptimizedCharDict(font)
     
     return optimizedCharDict
@@ -94,7 +96,7 @@ def getCharWeightingsKeys(weightings):
 def mapRGBtoChars(rgbData, weightings, keys):
     rgbWidth = len(rgbData[0])
     rgbHeight = len(rgbData)
-    pixelPatchLen = 25
+    pixelPatchLen = 14
 
     for row in range(0, rgbHeight, pixelPatchLen):
         for col in range(0, rgbWidth, pixelPatchLen):
@@ -134,18 +136,19 @@ def getBrightnessToChar(bAverage, weightings, keyList):
 
 if __name__ == "__main__":
     charWeightings = getCharWeightings()
+    charWeightings[255] = chr(32)
     charWeightingsKeys = getCharWeightingsKeys(charWeightings)
 
-    img = Image.open("Photos/Me.jpg")
+    img = Image.open("Photos/broncos.png")
     contraster = ImageEnhance.Contrast(img)
-    img = contraster.enhance(2.75)
+    img = contraster.enhance(2)
     mapRGBtoChars(extractRGBdata(img), charWeightings, charWeightingsKeys)
 
-    # charList = []
-    # for comb in charWeightings.items():
-        # charList.append(comb)
-# 
-    # charList.sort()
-    # for comb in charList:
-        # # print(comb[1], end=" ")
-        # print(comb)
+    charList = []
+    for comb in charWeightings.items():
+        charList.append(comb)
+
+    charList.sort()
+    for comb in charList:
+        # print(comb[1], end=" ")
+        print(comb)
