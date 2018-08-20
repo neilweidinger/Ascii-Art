@@ -10,8 +10,9 @@ def extractRGBdata(image):
 
     count = 0
     row = []
-    for r, g, b in data:
-        row.append((r, g, b))
+
+    for vals in data:
+        row.append(vals[0:3])
         count += 1
 
         if count % width == 0:
@@ -96,7 +97,7 @@ def getCharWeightingsKeys(weightings):
 def mapRGBtoChars(rgbData, weightings, keys):
     rgbWidth = len(rgbData[0])
     rgbHeight = len(rgbData)
-    pixelPatchLen = 14
+    pixelPatchLen = 10
 
     for row in range(0, rgbHeight, pixelPatchLen):
         for col in range(0, rgbWidth, pixelPatchLen):
@@ -136,7 +137,7 @@ def getBrightnessToChar(bAverage, weightings, keyList):
 
 if __name__ == "__main__":
     charWeightings = getCharWeightings()
-    charWeightings[255] = chr(32)
+    charWeightings[255] = chr(32) # make sure space character is included in weightings
     charWeightingsKeys = getCharWeightingsKeys(charWeightings)
 
     img = Image.open("Photos/broncos.png")
@@ -144,11 +145,11 @@ if __name__ == "__main__":
     img = contraster.enhance(2)
     mapRGBtoChars(extractRGBdata(img), charWeightings, charWeightingsKeys)
 
-    charList = []
-    for comb in charWeightings.items():
-        charList.append(comb)
-
-    charList.sort()
-    for comb in charList:
-        # print(comb[1], end=" ")
-        print(comb)
+    # charList = []
+    # for comb in charWeightings.items():
+        # charList.append(comb)
+# 
+    # charList.sort()
+    # for comb in charList:
+        # # print(comb[1], end=" ")
+        # print(comb)
