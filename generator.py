@@ -1,5 +1,6 @@
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance
 from search import binarySearch, leftmost, rightmost
+import os
 
 # returns 2D array of rgb data [0, 0] corresponding to top left corner of image
 def extractRGBdata(image):
@@ -97,7 +98,11 @@ def getCharWeightingsKeys(weightings):
 def mapRGBtoChars(rgbData, weightings, keys):
     rgbWidth = len(rgbData[0])
     rgbHeight = len(rgbData)
-    pixelPatchLen = 10
+
+    # here we make sure that our ascii art always fits within the width of our terminal
+    terminalWidth = int(os.popen('tput cols', 'r').read()) # width is returned as str so convert to int
+     # ceil our number then * 2 to account for spaces taking up half our possible terminal area
+    pixelPatchLen= int(rgbWidth / terminalWidth + 1) * 2
 
     for row in range(0, rgbHeight, pixelPatchLen):
         for col in range(0, rgbWidth, pixelPatchLen):
