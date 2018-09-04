@@ -8,7 +8,6 @@ def extractRGBdata(image):
     width, height = image.size
 
     rgbVals = []
-
     count = 0
     row = []
 
@@ -16,7 +15,7 @@ def extractRGBdata(image):
         row.append(vals[0:3])
         count += 1
 
-        if count % width == 0:
+        if count % width == 0: # we've finished one horizontal line of pixels, start new line
             rgbVals.append(row)
             row = []
 
@@ -29,7 +28,7 @@ def printRGBvals(rgbVals):
         print("")
 
 def getUnoptimizedCharDict(font):
-    charDict= {}
+    charDict = {}
 
     for i in range(32, 127):
     # for i in list(range(32, 127)) + list(range(9617, 9620)) + list(range(9608, 9609)):
@@ -47,12 +46,13 @@ def getBrightnessAverage(rgbData):
     width = len(rgbData[0])
     height = len(rgbData)
 
-    bTotal = 0
+    bTotal = 0 # brightness total
+
     for row in rgbData:
         for rgbPixel in row:
-            bTotal += (sum(rgbPixel) / 3)
-    bAverage = bTotal / (width * height)
+            bTotal += (sum(rgbPixel) / 3) # add brightness of each pixel
 
+    bAverage = bTotal / (width * height)
     return bAverage
 
 # this function just adjusts our character weightings to a scale of [0, 255]
@@ -101,10 +101,11 @@ def mapRGBtoChars(rgbData, weightings, keys):
 
     # here we make sure that our ascii art always fits within the width of our terminal
     terminalWidth = int(os.popen('tput cols', 'r').read()) # width is returned as str so convert to int
-     # ceil our number then * 2 to account for spaces taking up half our possible terminal area
+
     if rgbWidth <= terminalWidth:
         pixelPatchLen = 1
     else:
+        # ceil our number then * 2 to account for spaces taking up half our possible terminal area
         pixelPatchLen= int(rgbWidth / terminalWidth + 1) * 2
 
     for row in range(0, rgbHeight, pixelPatchLen):
@@ -148,7 +149,7 @@ if __name__ == "__main__":
     charWeightings[0] = chr(32) # make sure space character is included in weightings
     charWeightingsKeys = getCharWeightingsKeys(charWeightings)
 
-    img = Image.open("Photos/broncos.png")
+    img = Image.open("Photos/Mona.png")
     contraster = ImageEnhance.Contrast(img)
     img = contraster.enhance(2)
     mapRGBtoChars(extractRGBdata(img), charWeightings, charWeightingsKeys)
