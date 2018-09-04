@@ -37,11 +37,12 @@ def getUnoptimizedCharDict(font):
         draw = ImageDraw.Draw(charImage) # create ImageDraw object
         draw.text((0, 0), chr(i), fill=(255, 255, 255), font=font) # draw char onto image
 
-        charDict[getBrightnessAverage(extractRGBdata(charImage))] = chr(i) # brightnessAvg:char
+        bIndex = getBrightnessAverage(extractRGBdata(charImage))
+        charDict[bIndex] = chr(i) # put our char into our dict using the format brightnessAvg:char
 
     return charDict
 
-# returns average brightness of a specified patch of pixels
+# returns average brightness of a specified patch of pixels (Doesn't have to be a whole image!)
 def getBrightnessAverage(rgbData):
     width = len(rgbData[0])
     height = len(rgbData)
