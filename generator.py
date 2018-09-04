@@ -57,17 +57,18 @@ def getBrightnessAverage(rgbData):
     return bAverage
 
 # this function just adjusts our character weightings to a scale of [0, 255]
+# e.g. unoptCharDict may have keys [0, 84], which we don't want
 def getOptimizedCharDict(font):
-    charDict = getUnoptimizedCharDict(font)
-    newCharDict = {}
+    unoptCharDict = getUnoptimizedCharDict(font)
+    optCharDict = {}
 
-    min, max = getMinMaxKey(charDict)
+    min, max = getMinMaxKey(unoptCharDict)
 
-    for bAverage, char in charDict.items():
-        scaledB = int((255 * (bAverage - min)) / (max - min)) # truncate each key just to make things simpler
-        newCharDict[scaledB] = char
+    for bAverage, char in unoptCharDict.items():
+        scaledB = int((255 * (bAverage - min)) / (max - min)) # truncate each key so that we can have integer indexes
+        optCharDict[scaledB] = char
 
-    return newCharDict
+    return optCharDict
 
 def getMinMaxKey(charDict):
     keys = list(charDict.keys())
@@ -84,6 +85,7 @@ def getMinMaxKey(charDict):
 def getCharWeightings():
     font = ImageFont.truetype("Fonts/Menlo.ttc", 100)
     optimizedCharDict = getOptimizedCharDict(font)
+    optimizedCharDict[0] = chr(32) # manually make sure space character is included in weightings
     
     return optimizedCharDict
 
@@ -147,7 +149,6 @@ def getBrightnessToChar(bAverage, weightings, keyList):
 
 if __name__ == "__main__":
     charWeightings = getCharWeightings()
-    charWeightings[0] = chr(32) # make sure space character is included in weightings
     charWeightingsKeys = getCharWeightingsKeys(charWeightings)
 
     img = Image.open("Photos/Mona.png")
