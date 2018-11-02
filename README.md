@@ -1,2 +1,4 @@
 # Ascii-Art
-Just prints out images in Ascii form
+Takes in an image and outputs an ascii representation of it.
+
+Install Pillow using pip.
