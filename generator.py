@@ -1,6 +1,7 @@
 from PIL import Image, ImageFont, ImageDraw, ImageEnhance
 from search import binarySearch, leftmost, rightmost
 import os
+import argparse
 
 # returns 2D array of rgb data [0, 0] corresponding to top left corner of image
 def extractRGBdata(image):
@@ -151,7 +152,11 @@ if __name__ == "__main__":
     charWeightings = getCharWeightings()
     charWeightingsKeys = getCharWeightingsKeys(charWeightings)
 
-    img = Image.open("Photos/Mona.png")
+    parser = argparse.ArgumentParser(prog='generator.py', description='Output an image in ascii form')
+    parser.add_argument('image', type=str, help='path of the image to be converted to ascii form')
+    args = parser.parse_args()
+
+    img = Image.open(args.image)
     contraster = ImageEnhance.Contrast(img)
     img = contraster.enhance(2)
     mapRGBtoChars(extractRGBdata(img), charWeightings, charWeightingsKeys)
