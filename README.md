@@ -3,6 +3,7 @@ A short program written in Python using the Pillow module that takes in an image
 
 ## Requirements
 Tested using Python 3.7
+</br>
 Uses Pillow module
 
 Install requirements using pip:
