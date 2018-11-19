@@ -15,6 +15,10 @@ $ pip3 install -r requirements.txt
 $ python3 generator.py <path of image to be converted>
 ```
 
+## Screenshots
+![example1](https://i.imgur.com/5UdG06y.jpg)
+![example2](https://i.imgur.com/BGd4SAd.jpg)
+
 ## Useful Links
 - [A Basic ASCII Art Alogorithm](http://mattmik.com/articles/ascii/ascii.html)
 - [Converting Images to ASCII Art](https://bitesofcode.wordpress.com/2017/01/19/converting-images-to-ascii-art-part-1/)
