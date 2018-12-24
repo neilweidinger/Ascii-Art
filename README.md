@@ -1,5 +1,5 @@
 # Ascii-Art
-A short program written in Python using the Pillow module that takes in an image and outputs it in ASCII form.
+A short program written in Python using the Pillow module that takes in an image and outputs it in ASCII form (planning to implement a color version sometime soon).
 
 ## Requirements
 Tested using Python 3.7
