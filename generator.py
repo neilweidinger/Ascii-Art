@@ -3,6 +3,8 @@ from search import binarySearch, leftmost, rightmost
 import os
 import argparse
 
+# empty line
+
 # returns 2D array of rgb data [0, 0] corresponding to top left corner of image
 def extractRGBdata(image):
     data = list(image.getdata())
